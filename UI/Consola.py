@@ -1,4 +1,6 @@
 from Domain.Librarie import to_str
+from Logic.Operatiuni import aplicare_discount
+from Logic.crud import add_carte, stergere_librarie
 
 def print_menu():
     print ('''
@@ -10,77 +12,43 @@ def print_menu():
     5. Ordonarea vânzărilor crescător după preț
     6. Afișarea numărului de titluri distincte pentru fiecare gen
     7. Undo
+    8. Afisare lista
+    9. Stergere
     x. Iesire''')
 
-def print_menu_crud():
-    print('''
-    
-    Meniu Crud
-    1. Adaugare
-    2. Stergere
-    3. Modificare Vanzare
-    4. Afisare lista carti
-    5. Inapoi la Meniul Principal
-    
-    ''')
 
-def run_crud_UI(librarie):
 
-    def handle_add_carte_UI(librarie):
-        pass
+def handle_add_carte_UI(librarie):
+    id = input ("Introduceti id-ul: ")
+    titlu = input("Introduceti titlul: ")
+    gen = input("Introduceti genul: ")
+    pret = float(input("Introduceti pretul: "))
+    reducere = input ("Introduceti tipul de reducere (none, silver, gold): ")
+    add_carte(librarie, id, titlu, gen, pret, reducere)
+    print("Cartea a fost adaugata! ")
 
-    def handle_show(librarie):
+
+def handle_sterge_carte_UI(librarie):
+    id = input("Introduceti id-ul cartii ce urmeaza sa fie stearsa ")
+    print("Cartea cu id-ul respectiv a fost stearsa din lista! ")
+    return stergere_librarie(id, librarie)
+
+
+def handle_show(librarie):
         '''
         Afisare lista carti
         :param librarie: lista de carti
         :return:
         '''
         for carte in librarie:
-            to_str(prajitura)
-
-
-    while True:
-        print_menu_crud()
-        cmd = input ("Comanda dvs: ")
-        if cmd == '1':
-            handle_add_carte_UI(librarie)
-        elif cmd == '2':
-            pass
-        elif cmd =='3':
-            pass
-        elif cmd == '4':
-            handle_show(librarie)
-        elif cmd == '5':
-            break
-        else:
-            print("Comanda invalida")
-
-
-def run_aplicare_discount_UI(librarie):
-    pass
-
-
-def run_modif_gen_UI(librarie):
-    pass
-
-
-def run_pret_minim_UI(librarie):
-    pass
-
-
-def run_ord_vanzari_UI(librarie):
-    pass
-
-
-def run_nr_titluri_UI(librarie):
-    pass
+            print(to_str(carte))
 
 
 def run_undo_UI(librarie):
     pass
 
 
-def run_console (librarie):
+def run_console(librarie):
     '''
 
     :param librarie: lista de carti
@@ -90,9 +58,10 @@ def run_console (librarie):
         print_menu()
         cmd = input ("Comanda dvs: ")
         if cmd == '1':
-            run_crud_UI(librarie)
+            handle_add_carte_UI(librarie)
         elif cmd == '2':
-            run_aplicare_discount_UI(librarie)
+            print("Lista a fost modificata! ")
+            librarie = aplicare_discount(librarie)
         elif cmd == '3':
             run_modif_gen_UI(librarie)
         elif cmd == '4':
@@ -103,6 +72,11 @@ def run_console (librarie):
             run_nr_titluri_UI(librarie)
         elif cmd == '7':
             run_undo_UI(librarie)
+        elif cmd =='8':
+            print("Cartea cu id-ul dat a fost stearsa: ")
+            handle_show(librarie)
+        elif cmd == '9':
+            librarie = handle_sterge_carte_UI(librarie)
         elif cmd == 'x':
             break
         else:

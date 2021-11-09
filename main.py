@@ -5,5 +5,5 @@ def main():
     librarie = []
     run_console(librarie)
 
-run_tests
+run_tests()
 main()

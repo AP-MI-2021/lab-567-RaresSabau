@@ -54,8 +54,9 @@ def get_reducere(librarie):
     :param librarie: Dict
     :return: reducere - string
     '''
+    return librarie['reducere']
 
 def to_str(librarie):
-    return f'id={get_id(librarie)}, titlu={get_titlu(librarie)}, gen={get_gen(librarie)}, pret={get_pret(librarie)}'\
-        f' reducere={get_reducere(librarie)}'
+    return f'id = {get_id(librarie)}, titlu = {get_titlu(librarie)}, gen = {get_gen(librarie)}' \
+           f' pret = {get_pret(librarie)}, reducere = {get_reducere(librarie)}'
 
