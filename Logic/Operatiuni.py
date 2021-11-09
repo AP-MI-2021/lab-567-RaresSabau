@@ -1,32 +1,118 @@
-from Domain.Librarie import get_id, get_gen, get_titlu, get_pret, get_reducere, create_librarie
+from Domain.Librarie import get_id, creeaza_librarie, get_gen, get_titlu, get_pret, get_reducere
+from Logic.crud import add_librarie, get_by_id, modifica_librarie
 
-def aplicare_discount(librarie):
+
+def discount(lista):
     """
-       Aplica discount in functie de reducere
-       :param lista: lista de vanzari
-       :return: o lista continand atat vanzarile reduse cat si cele nemodificate
-       """
-    librarie_reducere = []
-    for carte in librarie:
-        if get_reducere(carte) == "silver":
-            carte_noua = create_librarie(
-                get_id(carte),
-                get_titlu(carte),
-                get_gen(carte),
-                get_pret(carte) - 5 / 100 * get_pret(carte),
-                get_reducere(carte)
+    da un discount de 5% respectiv 10% pentru toate cartiile ce au tipul de reducere silver respectiv gold
+    :param lista: lista de carti
+    :return: lista de carti cu preturile modificate
+    h
+    """
+    listaNoua = []
+    for librarie in lista:
+        if get_reducere(librarie) == "silver":
+            librarieNoua = creeaza_librarie(
+                get_id(librarie),
+                get_titlu(librarie),
+                get_gen(librarie),
+                get_pret(librarie) - (0.05 * get_pret(librarie)),
+                get_reducere(librarie)
             )
-            librarie_reducere.append(carte_noua)
-        elif get_reducere(carte) == "gold":
-            carte_noua = create_librarie(
-                get_id(carte),
-                get_titlu(carte),
-                get_gen(carte),
-                get_pret(carte) - 1 / 10 * get_pret(carte),
-                get_reducere(carte)
+            listaNoua.append(librarieNoua)
+        elif get_reducere(librarie) == "gold":
+            librarieNoua = creeaza_librarie(
+                get_id(librarie),
+                get_titlu(librarie),
+                get_gen(librarie),
+                get_pret(librarie) - (0.1 * get_pret(librarie)),
+                get_reducere(librarie)
             )
-            librarie_reducere.append(carte_noua)
+            listaNoua.append(librarieNoua)
         else:
-            librarie_reducere.append(carte)
+            listaNoua.append(librarie)
+    return listaNoua
 
-    return librarie_reducere
+
+def command_line_console(comand, lista):
+    list_comand = comand.split(",")
+    for x in range(len(list_comand)):
+        if list_comand[x] == "add":
+            try:
+                if get_by_id(list_comand[x + 1], lista) is not None:
+                    raise ValueError("Id-ul " + list_comand[x + 1] + " exista deja")
+                lista = add_librarie(list_comand[x + 1], list_comand[x + 2], list_comand[x + 3], list_comand[x + 4],
+                                     list_comand[x + 5], lista)
+            except ValueError as ve:
+                print("Error: {}".format(ve))
+        if list_comand[x] == "show all":
+            from UI.Consola import show_all
+            show_all(lista)
+        if list_comand[x] == "edit":
+            try:
+                if get_by_id(list_comand[x + 1], lista) is None:
+                    raise ValueError("Nu exista o librarie cu id-ul " + list_comand[x + 1])
+                lista = modifica_librarie(list_comand[x + 1], list_comand[x + 2], list_comand[x + 3],
+                                          list_comand[x + 4], list_comand[x + 5], lista)
+            except ValueError as ve:
+                print("Error: {}".format(ve))
+    return lista
+
+
+def modificare_gen(numeOriginal, numeSchimbat, lista):
+    """
+        modifica genul unei carti care are titlul dat
+        :param numeOriginal:
+        :param noulGen:
+        :param lista:
+        :return:
+        """
+    listaNoua = []
+    for librarie in lista:
+        if get_titlu(librarie) == numeOriginal:
+            librarieNoua = creeaza_librarie(
+                get_id(librarie),
+                get_titlu(librarie),
+                numeSchimbat,
+                get_pret(librarie),
+                get_reducere(librarie)
+            )
+            listaNoua.append(librarieNoua)
+        else:
+            listaNoua.append(librarie)
+    return listaNoua
+
+
+def pret_minim(lista):
+    rezultat = {}
+    for librarie in lista:
+        gen = get_gen(librarie)
+        pret = get_pret(librarie)
+        if gen in rezultat:
+            if pret < rezultat[gen]:
+                rezultat[gen] = pret
+        else:
+            rezultat[gen] = pret
+    return rezultat
+
+
+def nr_titluri(lista):
+    rezultat = {}
+    aux = []
+    for librarie in lista:
+        gen = get_gen(librarie)
+        ok = 0
+        titlu = get_titlu(librarie)
+        for p in aux:
+            if titlu == p:
+                ok = 1
+        aux.append(titlu)
+        if gen in rezultat and ok == 0:
+            rezultat[gen] = rezultat[gen] + 1
+        else:
+            rezultat[gen] = 1
+    return rezultat
+
+
+def ordonare_pret(lista):
+    return sorted(lista, key=lambda librarie: get_pret(librarie))

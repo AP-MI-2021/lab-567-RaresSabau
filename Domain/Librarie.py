@@ -1,62 +1,48 @@
-def create_librarie(id, titlu_carte, gen_carte, pret, tip_reducere_client):
-    '''
+def creeaza_librarie(id, titlu, gen, pret, reducere):
+    """
+    creeaza o lista de vanzari de carti (librarie)
+    :param id:int
+    :param titlu:string
+    :param gen:string
+    :param pret:float
+    :param reducere:silver,    gold,   none
+    :return:o lista de vanzari
+    """
+    list=[]
+    list.append(id)
+    list.append(titlu)
+    list.append(gen)
+    list.append(pret)
+    list.append(reducere)
+    return list
 
-    :param id: string
-    :param titlu_carte: string
-    :param gen_carte: string
-    :param pret: float
-    :param tip_reducere_client: string (none, silver, gold)
-    :return: Dict
-    '''
-    return {
-    "id" : id,
-    "titlu" : titlu_carte,
-    "gen" : gen_carte,
-    "pret" : pret,
-    "reducere" : tip_reducere_client,
-    }
 
-def get_id (librarie):
-    '''
 
-    :param librarie: Dict
-    :return: id - string
-    '''
-    return librarie['id']
+def get_id(librarie):
+    return librarie[0]
 
-def get_titlu (librarie):
-    '''
-
-    :param librarie: Dict
-    :return: titlu - string
-    '''
-    return librarie['titlu']
+def get_titlu(librarie):
+    return librarie[1]
 
 def get_gen(librarie):
-    '''
-
-    :param librarie: Dict
-    :return: gen - string
-    '''
-    return librarie['gen']
+    return librarie[2]
 
 def get_pret(librarie):
-    '''
-
-    :param librarie: Dict
-    :return: pret - float
-    '''
-    return librarie['pret']
+    return librarie[3]
 
 def get_reducere(librarie):
-    '''
-
-    :param librarie: Dict
-    :return: reducere - string
-    '''
-    return librarie['reducere']
+    return librarie[4]
 
 def to_str(librarie):
-    return f'id = {get_id(librarie)}, titlu = {get_titlu(librarie)}, gen = {get_gen(librarie)}' \
-           f' pret = {get_pret(librarie)}, reducere = {get_reducere(librarie)}'
-
+    """
+    conversteste un dictionar/o lista la string
+    :param librarie: lista
+    :return: string
+    """
+    return "Id: {}, Titlu: {}, Gen: {}, Pret: {}, Reducere: {}".format(
+        get_id(librarie),
+        get_titlu(librarie),
+        get_gen(librarie),
+        get_pret(librarie),
+        get_reducere(librarie),
+    )
