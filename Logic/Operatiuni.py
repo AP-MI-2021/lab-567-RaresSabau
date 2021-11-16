@@ -1,5 +1,5 @@
 from Domain.Librarie import get_id, creeaza_librarie, get_gen, get_titlu, get_pret, get_reducere
-from Logic.crud import add_librarie, get_by_id, modifica_librarie
+from Logic.crud import add_librarie, get_by_id, modifica_librarie, stergere_librarie
 
 
 def discount(lista):
@@ -34,53 +34,53 @@ def discount(lista):
     return listaNoua
 
 
-def command_line_console(comand, lista):
+def command_line_console(comand,lista):
     list_comand = comand.split(",")
     for x in range(len(list_comand)):
         if list_comand[x] == "add":
             try:
-                if get_by_id(list_comand[x + 1], lista) is not None:
-                    raise ValueError("Id-ul " + list_comand[x + 1] + " exista deja")
-                lista = add_librarie(list_comand[x + 1], list_comand[x + 2], list_comand[x + 3], list_comand[x + 4],
-                                     list_comand[x + 5], lista)
+                if get_by_id(list_comand[x+1], lista) is not None:
+                 raise ValueError("Id-ul "+list_comand[x+1]+" exista deja")
+                lista=add_librarie(list_comand[x+1], list_comand[x+2], list_comand[x+3], list_comand[x+4], list_comand[x+5], lista)
             except ValueError as ve:
                 print("Error: {}".format(ve))
         if list_comand[x] == "show all":
             from UI.Consola import show_all
             show_all(lista)
+        if list_comand[x] == "delete":
+            lista=stergere_librarie(list_comand[x+1], lista)
         if list_comand[x] == "edit":
             try:
-                if get_by_id(list_comand[x + 1], lista) is None:
-                    raise ValueError("Nu exista o librarie cu id-ul " + list_comand[x + 1])
-                lista = modifica_librarie(list_comand[x + 1], list_comand[x + 2], list_comand[x + 3],
-                                          list_comand[x + 4], list_comand[x + 5], lista)
+                if get_by_id(list_comand[x+1], lista) is None:
+                    raise ValueError("Nu exista o librarie cu id-ul "+list_comand[x+1])
+                lista=modifica_librarie(list_comand[x+1], list_comand[x+2], list_comand[x+3], list_comand[x+4], list_comand[x+5], lista)
             except ValueError as ve:
-                print("Error: {}".format(ve))
+                print("Error: {}" .format(ve))
     return lista
 
 
-def modificare_gen(numeOriginal, numeSchimbat, lista):
+def modificare_gen(nume_initial, nume_schimbat, lista):
     """
         modifica genul unei carti care are titlul dat
-        :param numeOriginal:
+        :param nume_initial:
         :param noulGen:
         :param lista:
         :return:
         """
-    listaNoua = []
+    lista_noua = []
     for librarie in lista:
-        if get_titlu(librarie) == numeOriginal:
-            librarieNoua = creeaza_librarie(
+        if get_titlu(librarie) == nume_initial:
+            librarie_noua = creeaza_librarie(
                 get_id(librarie),
                 get_titlu(librarie),
-                numeSchimbat,
+                nume_schimbat,
                 get_pret(librarie),
                 get_reducere(librarie)
             )
-            listaNoua.append(librarieNoua)
+            lista_noua.append(librarie_noua)
         else:
-            listaNoua.append(librarie)
-    return listaNoua
+            lista_noua.append(librarie)
+    return lista_noua
 
 
 def pret_minim(lista):

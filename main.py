@@ -8,6 +8,7 @@ def main():
     lista = add_librarie("2", "Ion", "Realism", 30, "silver", lista)
     lista = add_librarie("3", "Enigma Otiliei", "Realism", 25, "gold", lista)
     run_menu(lista)
+    run_all_tests()
 
 if __name__ == '__main__':
     main()
